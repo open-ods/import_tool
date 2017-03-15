@@ -18,8 +18,8 @@ class Organisation(Base):
     __tablename__ = 'organisations'
 
     ref = Column(Integer, primary_key=True)
-    odscode = Column(String(10))
-    name = Column(String(200))
+    odscode = Column(String(10), index=True)
+    name = Column(String(200), index=True)
     status = Column(String(10))
     record_class = Column(String(10))
     last_changed = Column(String)
@@ -28,7 +28,7 @@ class Organisation(Base):
     operational_start_date = Column(Date)
     operational_end_date = Column(Date)
     ref_only = Column(Boolean)
-    post_code = Column(String(15))
+    post_code = Column(String(15), index=True)
 
     # Returns a printable version of the objects contents
     def __repr__(self):
