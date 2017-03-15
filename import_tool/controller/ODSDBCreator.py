@@ -15,7 +15,7 @@ from import_tool.models.Successor import Successor
 from import_tool.models.Version import Version
 from import_tool.models.Setting import Setting
 
-schema_version = '010'
+schema_version = '011'
 
 # Get a logger
 log = logging.getLogger('import_ods_xml')
