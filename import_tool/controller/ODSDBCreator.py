@@ -137,6 +137,10 @@ class ODSDBCreator(object):
 
         organisations = {}
 
+        if self.__test_mode:
+            import_limit = 10
+            import_count = 0
+
         for idx, organisation in tqdm(enumerate(self.__ods_xml_data.findall(
                 '.Organisations/Organisation'))):
 
@@ -191,6 +195,11 @@ class ODSDBCreator(object):
             self.__create_relationships(organisations[idx], organisation)
 
             self.__create_successors(organisations[idx], organisation)
+
+            if self.__test_mode:
+                import_count += 1
+                if import_count > 10:
+                    break
 
         organisations = None
 
@@ -454,7 +463,7 @@ class ODSDBCreator(object):
 
         self.session.add(version)
 
-    def create_database(self, ods_xml_data):
+    def create_database(self, ods_xml_data, test_mode):
         """creates a sqlite database in the current path with all the data
 
         Parameters
@@ -467,6 +476,7 @@ class ODSDBCreator(object):
         """
         log.info('Starting import')
 
+        self.__test_mode = test_mode
         self.__ods_xml_data = ods_xml_data
         if self.__ods_xml_data is not None:
             try:
