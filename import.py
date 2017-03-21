@@ -32,6 +32,8 @@ parser.add_argument("-w", "--schema_url", type=str,
                     help="specify the url to the official XML schema file")
 parser.add_argument("-c", "--connection", type=str,
                     help="specify the connection string for the database engine")
+parser.add_argument("-t", "--testdb", action="store_true",
+                    help="create a db with limited records for testing purposes")
 
 args = parser.parse_args()
 
@@ -79,6 +81,12 @@ if args.connection:
 else:
     connection_string = None
 
+if args.testdb:
+    test_mode = True
+    log.debug("Running in test mode")
+else:
+    test_mode = False
+
 log.debug("Running in verbose mode")
 
 if local_mode:
@@ -125,7 +133,7 @@ if __name__ == '__main__':
     engine = get_engine()
 
     import_start_time = time.time()
-    ODSDBCreator(engine).create_database(ods_xml_data)
+    ODSDBCreator(engine).create_database(ods_xml_data, test_mode)
     log.debug('Data Processing Time = %s', time.strftime(
         "%H:%M:%S", time.gmtime(time.time() - import_start_time)))
 
