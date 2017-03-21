@@ -336,6 +336,11 @@ class ODSDBCreator(object):
                 pass
 
             try:
+                organisation.post_code = location.find('PostCode').text
+            except AttributeError:
+                pass
+
+            try:
                 address.country = location.find('Country').text
             except AttributeError:
                 pass
