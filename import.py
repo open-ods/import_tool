@@ -32,6 +32,8 @@ parser.add_argument("-w", "--schema_url", type=str,
                     help="specify the url to the official XML schema file")
 parser.add_argument("-c", "--connection", type=str,
                     help="specify the connection string for the database engine")
+parser.add_argument("-t", "--testdb", action="store_true",
+                    help="create a db with limited records for testing purposes")
 
 args = parser.parse_args()
 
@@ -78,6 +80,12 @@ if args.connection:
     log.debug("Connection parameter provided: %s" % connection_string)
 else:
     connection_string = None
+
+if args.testdb:
+    test_mode = True
+    log.debug("Running in test mode")
+else:
+    test_mode = False
 
 log.debug("Running in verbose mode")
 
