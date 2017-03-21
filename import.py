@@ -133,7 +133,7 @@ if __name__ == '__main__':
     engine = get_engine()
 
     import_start_time = time.time()
-    ODSDBCreator(engine).create_database(ods_xml_data)
+    ODSDBCreator(engine).create_database(ods_xml_data, test_mode)
     log.debug('Data Processing Time = %s', time.strftime(
         "%H:%M:%S", time.gmtime(time.time() - import_start_time)))
 
