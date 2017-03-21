@@ -94,12 +94,31 @@ class ODSDBCreator(object):
                 codesystems[idx].name = code_system_type_name
                 codesystems[idx].displayname = display_name
 
-                # pop these in a global dictionary, we will use these later in
-                # __create_organisations
+                # pop these in a global  dictionary, we will use these later in __create_organisations
                 self.__code_system_dict[relationship_id] = display_name
 
                 # append this instance of code system to the session
                 self.session.add(codesystems[idx])
+
+        primary_role_scope = './Manifest/PrimaryRoleScope'
+
+        primary_role_scopes = self.__ods_xml_data.find(primary_role_scope)
+
+        for idx, primary_role in enumerate(primary_role_scopes.findall('PrimaryRole')):
+
+            codesystems = {}
+
+            codesystems[idx] = CodeSystem()
+
+            primary_role_id = primary_role.attrib.get('id')
+            primary_role_display_name = primary_role.attrib.get('displayName')
+            code_system_type_name = 'PrimaryRoleScope'
+
+            codesystems[idx].id = primary_role_id
+            codesystems[idx].name = code_system_type_name
+            codesystems[idx].displayname = primary_role_display_name
+
+            self.session.add(codesystems[idx])
 
     def __create_organisations(self):
         """Creates the organisations and adds them to the session
@@ -423,7 +442,15 @@ class ODSDBCreator(object):
             './Manifest/PublicationType').attrib.get('value')
         version.publication_seqno = self.__ods_xml_data.find(
             './Manifest/PublicationSeqNum').attrib.get('value')
+        version.publication_source = self.__ods_xml_data.find(
+            './Manifest/PublicationSource').attrib.get('value')
+        version.file_creation_date = self.__ods_xml_data.find(
+            './Manifest/FileCreationDateTime').attrib.get('value')
         version.import_timestamp = datetime.datetime.now()
+        version.record_count = self.__ods_xml_data.find(
+            './Manifest/RecordCount').attrib.get('value')
+        version.content_description = self.__ods_xml_data.find(
+            './Manifest/ContentDescription').attrib.get('value')
 
         self.session.add(version)
 
