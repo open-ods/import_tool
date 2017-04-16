@@ -42,6 +42,4 @@ Import Completed.
 
 [Importing / Exporting with PostgreSQL](docs/importing_exporting_psql.md)
 
-[Restoring to PostgreSQL](docs/restoring_to_psql.md)
-
-[Restoring to Heroku PostgreSQL](docs/restoring_to_heroku.md)
+[Restoring to Heroku](docs/restoring_to_heroku_pg.md)

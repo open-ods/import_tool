@@ -33,7 +33,7 @@ parser.add_argument("-w", "--schema_url", type=str,
 parser.add_argument("-c", "--connection", type=str,
                     help="specify the connection string for the database engine")
 parser.add_argument("-t", "--testdb", action="store_true",
-                    help="create a db with limited records for testing purposes")
+                    help="create a db with only 10 records for use in testing")
 
 args = parser.parse_args()
 
