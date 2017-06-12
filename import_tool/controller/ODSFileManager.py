@@ -63,7 +63,7 @@ class ODSFileManager(object):
 
             with urllib.request.urlopen(url) as response:
                 # Download the file and save it to a temporary file name
-                with open(tmp_file_name, 'wb') as out_file:
+                with open(tmp_file_name) as out_file:
                     log.info("Downloading schema")
                     out_file.write(response.read())
 
@@ -106,7 +106,7 @@ class ODSFileManager(object):
 
             with urllib.request.urlopen(url) as response:
                 # Download the file and save it to a temporary file name
-                with open(tmp_file_name, 'wb') as out_file:
+                with open(tmp_file_name) as out_file:
                     log.info("Downloading data")
                     out_file.write(response.read())
 
