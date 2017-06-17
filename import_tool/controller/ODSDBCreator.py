@@ -17,9 +17,6 @@ from import_tool.models.Setting import Setting
 
 schema_version = '012'
 
-# Get a logger
-log = logging.getLogger('import_ods_xml')
-
 
 def convert_string_to_date(string):
     return datetime.datetime.strptime(string, '%Y-%m-%d')
@@ -32,7 +29,8 @@ class ODSDBCreator(object):
 
     def __init__(self, engine):
         # Create the SQLAlchemy session
-        log.debug("Creating SQLAlchemy session")
+        logger = logging.getLogger(__name__)
+        logger.debug("Creating SQLAlchemy session")
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
@@ -41,8 +39,9 @@ class ODSDBCreator(object):
         metadata.create_all(engine)
 
     def __create_settings(self):
-
-        log.debug("Setting schema version")
+    
+        logger = logging.getLogger(__name__)
+        logger.debug("Setting schema version")
         setting = Setting()
         setting.key = 'schema_version'
         setting.value = schema_version
@@ -59,8 +58,9 @@ class ODSDBCreator(object):
         -------
         None
         """
-
-        log.debug("Adding codesystem information")
+        
+        logger = logging.getLogger(__name__)
+        logger.debug("Adding codesystem information")
 
         # these are all code systems, we have a DRY concept here as so much of
         # this code is common, it doesn't make sense to do it 3 times, lets
@@ -133,7 +133,8 @@ class ODSDBCreator(object):
 
         """
 
-        log.debug("Adding organisation information")
+        logger = logging.getLogger(__name__)
+        logger.debug("Adding organisation information")
 
         organisations = {}
 
@@ -440,7 +441,8 @@ class ODSDBCreator(object):
         None
         """
 
-        log.debug("Adding version information")
+        logger = logging.getLogger(__name__)
+        logger.debug("Adding version information")
         version = Version()
 
         version.file_version = self.__ods_xml_data.find(
@@ -474,7 +476,8 @@ class ODSDBCreator(object):
         -------
         None
         """
-        log.info('Starting import')
+        logger = logging.getLogger(__name__)
+        logger.info('Starting import')
 
         self.__test_mode = test_mode
         self.__ods_xml_data = ods_xml_data
@@ -485,14 +488,17 @@ class ODSDBCreator(object):
                 self.__create_organisations()
                 self.__create_settings()
 
-                log.debug("Committing session")
+                logger = logging.getLogger(__name__)
+                logger.debug("Committing session")
                 self.session.commit()
 
             except Exception as e:
                 # If anything fails, let's not commit anything
+                logger = logging.getLogger(__name__)
+                logger.error("Unexpected error:", sys.exc_info()[0])
+                logger.debug("Rolling back...")
                 self.session.rollback()
-                print("Unexpected error:", sys.exc_info()[0])
-                log.error(e)
+                logger.debug("Rollback complete")
                 raise
 
             finally:
