@@ -125,15 +125,23 @@ def get_engine():
 
 
 if __name__ == '__main__':
+
     total_start_time = time.time()
+    
+    # Get the XML data
     ods_xml_data = File_manager.get_latest_xml()
+    
     log.debug('Data Load Time = %s', time.strftime(
         "%H:%M:%S", time.gmtime(time.time() - total_start_time)))
 
+    # Get a database engine (according to specified command line argument
     engine = get_engine()
 
     import_start_time = time.time()
+    
+    # Do the import into the empty database
     ODSDBCreator(engine).create_database(ods_xml_data, test_mode)
+    
     log.debug('Data Processing Time = %s', time.strftime(
         "%H:%M:%S", time.gmtime(time.time() - import_start_time)))
 
