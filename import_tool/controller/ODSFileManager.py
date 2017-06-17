@@ -40,8 +40,7 @@ class ODSFileManager(object):
         pass
 
     def __retrieve_latest_schema_file(self):
-        """The purpose of this function is to retrieve the latest
-        published schema file from a public published location
+        """Retrieve the latest published schema file from a publicly-accessible published location
 
         Parameters
         ----------
@@ -55,7 +54,7 @@ class ODSFileManager(object):
         file_name = self.schema_file_path
         tmp_file_name = str.format("%s.tmp" % file_name)
 
-        # If we are not running in local mode, we attempt to download the latest schema zip file first
+        # If we are not running in local mode, we attempt to download the latest schema zip file first.
         if not self.__local_mode:
             url = self.schema_url
 
@@ -78,7 +77,8 @@ class ODSFileManager(object):
                     else:
                         raise ValueError('Unable to locate the schema file')
 
-        # Otherwise we simply check that the zip file is already there locally and return the file name
+        # If we are running in local mode, we simply check that the zip file is already present locally
+        # and return the file name
         else:
             if os.path.isfile(file_name):
                 return file_name
@@ -121,7 +121,8 @@ class ODSFileManager(object):
                     else:
                         raise ValueError('Unable to locate the data file')
 
-        # Otherwise we simply check that the zip file is already there locally and return the file name
+        # If we are running in local mode, We check that the data zip file is present locally
+        # and return the file name
         else:
             if os.path.isfile(file_name):
                 return file_name
@@ -154,12 +155,9 @@ class ODSFileManager(object):
             print('Unexpected error:', sys.exc_info()[0])
             raise
 
-    # The purpose of this function is to determine if we have a zip
-    # for or xml file, check it is valid
-    # and then populate an etree object for us to parse
     def __import_latest_datafile(self, data_filename):
-        """The purpose of this function is to determine if we have a zip
-        for or xml file, check it is valid
+        """Determine if we have a zip file or xml file, check that it is valid,
+        and then populate an etree object that we can parse
 
         Parameters
         ----------
@@ -206,8 +204,7 @@ class ODSFileManager(object):
             sys.exit(1)
 
     def get_latest_xml(self):
-        """The purpose of this function is to check if we have odsxml data
-        if we don't it should retrieve the latest version available and
+        """Check if we have ODS xml data. If we don't we should retrieve the latest version available and
         explode it from zip format into a xmltree object
 
         Parameters
