@@ -111,17 +111,17 @@ def get_engine():
 
     if args.dbms == "sqlite":
         log.debug("Using SQLite")
-        engine = create_engine(connection_string or 'sqlite:///openods.sqlite', echo=False)
+        db_engine = create_engine(connection_string or 'sqlite:///openods.sqlite', echo=False)
 
     elif args.dbms == "postgres":
         log.debug("Using PostgreSQL")
-        engine = create_engine(connection_string or "postgresql://openods:openods@localhost/openods", isolation_level="READ UNCOMMITTED")
+        db_engine = create_engine(connection_string or "postgresql://openods:openods@localhost/openods", isolation_level="READ UNCOMMITTED")
 
     elif args.dbms is None:
         log.debug("No DBMS specified - using SQLite")
-        engine = create_engine(connection_string or 'sqlite:///openods.sqlite', echo=False)
+        db_engine = create_engine(connection_string or 'sqlite:///openods.sqlite', echo=False)
 
-    return engine
+    return db_engine
 
 
 if __name__ == '__main__':
