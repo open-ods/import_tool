@@ -1,6 +1,7 @@
 import argparse
 import logging
 import time
+import sys
 
 from import_tool.controller.ODSFileManager import ODSFileManager
 
@@ -46,7 +47,12 @@ else:
     log.setLevel(logging.INFO)
 
 # Set local mode based on command line parameters
-local_mode = args.local
+if args.local:
+    local_mode = args.local
+else:
+    log.info("Download mode is not currently available due to the publicly-accessible source data being removed. Please"
+             "download the source data manually, and then re-run with the local switch e.g. 'python import.py -l'")
+    sys.exit(1)
 
 # Set the XML file path if specified, otherwise use default
 if args.xml:
