@@ -44,11 +44,12 @@ class ODSFileManager(object):
 
     def __retrieve_latest_schema_file(self):
         """The purpose of this function is to retrieve the latest
-        published schame file from a public published location
+        published schema file from a public published location
 
         Parameters
         ----------
         None
+        
         Returns
         -------
         String: Filename if found
@@ -92,6 +93,7 @@ class ODSFileManager(object):
         Parameters
         ----------
         None
+        
         Returns
         -------
         String: Filename if found
@@ -165,6 +167,7 @@ class ODSFileManager(object):
         Parameters
         ----------
         String: filename of the zip file containing the xml
+        
         Returns
         -------
         None
@@ -213,6 +216,7 @@ class ODSFileManager(object):
         Parameters
         ----------
         None
+        
         Returns
         -------
         xml_tree_parser: containing the entire xml dataset
