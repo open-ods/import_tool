@@ -8,9 +8,11 @@ from import_tool.controller.ODSDBCreator import ODSDBCreator
 from sqlalchemy import create_engine
 
 # Set up logging
-log = logging.getLogger('import_ods_xml')
+log_format = "%(asctime)s|OpenODS-Import|%(levelname)s|%(message)s"
+formatter = logging.Formatter(log_format)
+log = logging.getLogger(__name__)
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+ch.setFormatter(formatter)
 log.addHandler(ch)
 
 # Set up the command line arguments
