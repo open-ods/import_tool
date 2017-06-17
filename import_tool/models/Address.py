@@ -19,7 +19,7 @@ class Address(Base):
 
     addresses_ref = Column(Integer, primary_key=True)
     organisation_ref = Column(Integer)
-    org_odscode = Column(String(10))
+    org_odscode = Column(String(10), index=True)
     address_line1 = Column(String(75))
     address_line2 = Column(String(75))
     address_line3 = Column(String(75))

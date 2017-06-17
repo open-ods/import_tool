@@ -18,7 +18,7 @@ class CodeSystem(Base):
     __tablename__ = 'codesystems'
 
     ref = Column(Integer, primary_key=True)
-    id = Column(String(10))
+    id = Column(String(10), index=True)
     name = Column(String(50))
     displayname = Column(String(200))
 
