@@ -139,8 +139,8 @@ class ODSDBCreator(object):
         organisations = {}
 
         if self.__test_mode:
-            import_limit = 10
-            import_count = 0
+            test_import_limit = 10
+            test_import_count = 0
 
         for idx, organisation in tqdm(enumerate(self.__ods_xml_data.findall(
                 '.Organisations/Organisation'))):
@@ -198,8 +198,8 @@ class ODSDBCreator(object):
             self.__create_successors(organisations[idx], organisation)
 
             if self.__test_mode:
-                import_count += 1
-                if import_count > 10:
+                test_import_count += 1
+                if test_import_count > test_import_limit:
                     break
 
         organisations = None
