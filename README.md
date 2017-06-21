@@ -1,6 +1,17 @@
 # OpenODS Import Tool
-## Importing the ODS XML data into an OpenODS database
 
+This is an import tool for creating the SQL database for OpenODS.
+
+This repository uses Git Flow workflow:
+
+- master - for periodic stable releases
+- develop - for ongoing development work
+- feature/??? - for branched feature development
+
+If you are looking for the latest version of the code,
+check develop branch first.
+
+## Importing the ODS XML data into an OpenODS database
 ### Pre-requisites
 * SQLite or PostgreSQL (the API service requires PostgreSQL so SQLite just for database testing)
 * A way of running SQL queries against PostgreSQL (I use psql or [pgAdmin](http://www.pgadmin.org/download/macosx.php))
