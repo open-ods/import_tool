@@ -19,9 +19,9 @@ class Relationship(Base):
 
     ref = Column(Integer, primary_key=True)
     organisation_ref = Column(Integer)
-    code = Column(String(10))
-    target_odscode = Column(String(50))
-    org_odscode = Column(String(10))
+    code = Column(String(10), index=True)
+    target_odscode = Column(String(50), index=True)
+    org_odscode = Column(String(10), index=True)
     legal_start_date = Column(Date)
     legal_end_date = Column(Date)
     operational_start_date = Column(Date)

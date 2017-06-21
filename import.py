@@ -1,6 +1,7 @@
 import argparse
 import logging
 import time
+import sys
 
 from import_tool.controller.ODSFileManager import ODSFileManager
 
@@ -8,9 +9,11 @@ from import_tool.controller.ODSDBCreator import ODSDBCreator
 from sqlalchemy import create_engine
 
 # Set up logging
-log = logging.getLogger('import_ods_xml')
+log_format = "%(asctime)s|OpenODS-Import|%(levelname)s|%(message)s"
+formatter = logging.Formatter(log_format)
+log = logging.getLogger(__name__)
 ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
+ch.setFormatter(formatter)
 log.addHandler(ch)
 
 # Set up the command line arguments
@@ -32,6 +35,8 @@ parser.add_argument("-w", "--schema_url", type=str,
                     help="specify the url to the official XML schema file")
 parser.add_argument("-c", "--connection", type=str,
                     help="specify the connection string for the database engine")
+parser.add_argument("-t", "--testdb", action="store_true",
+                    help="create a db with only 10 records for use in testing")
 
 args = parser.parse_args()
 
@@ -42,7 +47,12 @@ else:
     log.setLevel(logging.INFO)
 
 # Set local mode based on command line parameters
-local_mode = args.local
+if args.local:
+    local_mode = args.local
+else:
+    log.info("Download mode is not currently available due to the publicly-accessible source data being removed. Please"
+             "download the source data manually, and then re-run with the local switch e.g. 'python import.py -l'")
+    sys.exit(1)
 
 # Set the XML file path if specified, otherwise use default
 if args.xml:
@@ -79,6 +89,12 @@ if args.connection:
 else:
     connection_string = None
 
+if args.testdb:
+    test_mode = True
+    log.debug("Running in test mode")
+else:
+    test_mode = False
+
 log.debug("Running in verbose mode")
 
 if local_mode:
@@ -103,29 +119,37 @@ def get_engine():
 
     if args.dbms == "sqlite":
         log.debug("Using SQLite")
-        engine = create_engine(connection_string or 'sqlite:///openods.sqlite', echo=False)
+        db_engine = create_engine(connection_string or 'sqlite:///openods.sqlite', echo=False)
 
     elif args.dbms == "postgres":
         log.debug("Using PostgreSQL")
-        engine = create_engine(connection_string or "postgresql://openods:openods@localhost/openods", isolation_level="READ UNCOMMITTED")
+        db_engine = create_engine(connection_string or "postgresql://openods:openods@localhost/openods", isolation_level="READ UNCOMMITTED")
 
     elif args.dbms is None:
         log.debug("No DBMS specified - using SQLite")
-        engine = create_engine(connection_string or 'sqlite:///openods.sqlite', echo=False)
+        db_engine = create_engine(connection_string or 'sqlite:///openods.sqlite', echo=False)
 
-    return engine
+    return db_engine
 
 
 if __name__ == '__main__':
+
     total_start_time = time.time()
+    
+    # Get the XML data
     ods_xml_data = File_manager.get_latest_xml()
+    
     log.debug('Data Load Time = %s', time.strftime(
         "%H:%M:%S", time.gmtime(time.time() - total_start_time)))
 
+    # Get a database engine (according to specified command line argument
     engine = get_engine()
 
     import_start_time = time.time()
-    ODSDBCreator(engine).create_database(ods_xml_data)
+    
+    # Do the import into the empty database
+    ODSDBCreator(engine).create_database(ods_xml_data, test_mode)
+    
     log.debug('Data Processing Time = %s', time.strftime(
         "%H:%M:%S", time.gmtime(time.time() - import_start_time)))
 

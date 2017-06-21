@@ -1,0 +1,26 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "a83fd9f605defb2878647c8aa06df5547b8c9f6e451a0d78c3ff959aac242183"
+        },
+        "requires": {},
+        "sources": [
+            {
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "lxml": {
+            "version": "==3.8.0"
+        },
+        "sqlalchemy": {
+            "version": "==1.1.10"
+        },
+        "tqdm": {
+            "version": "==4.14.0"
+        }
+    },
+    "develop": {}
+}

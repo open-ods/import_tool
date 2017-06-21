@@ -15,10 +15,7 @@ from import_tool.models.Successor import Successor
 from import_tool.models.Version import Version
 from import_tool.models.Setting import Setting
 
-schema_version = '010'
-
-# Get a logger
-log = logging.getLogger('import_ods_xml')
+schema_version = '012'
 
 
 def convert_string_to_date(string):
@@ -32,7 +29,8 @@ class ODSDBCreator(object):
 
     def __init__(self, engine):
         # Create the SQLAlchemy session
-        log.debug("Creating SQLAlchemy session")
+        logger = logging.getLogger(__name__)
+        logger.debug("Creating SQLAlchemy session")
         Session = sessionmaker(bind=engine)
         self.session = Session()
 
@@ -41,8 +39,9 @@ class ODSDBCreator(object):
         metadata.create_all(engine)
 
     def __create_settings(self):
-
-        log.debug("Setting schema version")
+    
+        logger = logging.getLogger(__name__)
+        logger.debug("Setting schema version")
         setting = Setting()
         setting.key = 'schema_version'
         setting.value = schema_version
@@ -59,8 +58,9 @@ class ODSDBCreator(object):
         -------
         None
         """
-
-        log.debug("Adding codesystem information")
+        
+        logger = logging.getLogger(__name__)
+        logger.debug("Adding codesystem information")
 
         # these are all code systems, we have a DRY concept here as so much of
         # this code is common, it doesn't make sense to do it 3 times, lets
@@ -94,12 +94,31 @@ class ODSDBCreator(object):
                 codesystems[idx].name = code_system_type_name
                 codesystems[idx].displayname = display_name
 
-                # pop these in a global dictionary, we will use these later in
-                # __create_organisations
+                # pop these in a global  dictionary, we will use these later in __create_organisations
                 self.__code_system_dict[relationship_id] = display_name
 
                 # append this instance of code system to the session
                 self.session.add(codesystems[idx])
+
+        primary_role_scope = './Manifest/PrimaryRoleScope'
+
+        primary_role_scopes = self.__ods_xml_data.find(primary_role_scope)
+
+        for idx, primary_role in enumerate(primary_role_scopes.findall('PrimaryRole')):
+
+            codesystems = {}
+
+            codesystems[idx] = CodeSystem()
+
+            primary_role_id = primary_role.attrib.get('id')
+            primary_role_display_name = primary_role.attrib.get('displayName')
+            code_system_type_name = 'PrimaryRoleScope'
+
+            codesystems[idx].id = primary_role_id
+            codesystems[idx].name = code_system_type_name
+            codesystems[idx].displayname = primary_role_display_name
+
+            self.session.add(codesystems[idx])
 
     def __create_organisations(self):
         """Creates the organisations and adds them to the session
@@ -114,9 +133,14 @@ class ODSDBCreator(object):
 
         """
 
-        log.debug("Adding organisation information")
+        logger = logging.getLogger(__name__)
+        logger.debug("Adding organisation information")
 
         organisations = {}
+
+        if self.__test_mode:
+            test_import_limit = 10
+            test_import_count = 0
 
         for idx, organisation in tqdm(enumerate(self.__ods_xml_data.findall(
                 '.Organisations/Organisation'))):
@@ -172,6 +196,11 @@ class ODSDBCreator(object):
             self.__create_relationships(organisations[idx], organisation)
 
             self.__create_successors(organisations[idx], organisation)
+
+            if self.__test_mode:
+                test_import_count += 1
+                if test_import_count > test_import_limit:
+                    break
 
         organisations = None
 
@@ -336,6 +365,11 @@ class ODSDBCreator(object):
                 pass
 
             try:
+                organisation.post_code = location.find('PostCode').text
+            except AttributeError:
+                pass
+
+            try:
                 address.country = location.find('Country').text
             except AttributeError:
                 pass
@@ -407,7 +441,8 @@ class ODSDBCreator(object):
         None
         """
 
-        log.debug("Adding version information")
+        logger = logging.getLogger(__name__)
+        logger.debug("Adding version information")
         version = Version()
 
         version.file_version = self.__ods_xml_data.find(
@@ -418,11 +453,19 @@ class ODSDBCreator(object):
             './Manifest/PublicationType').attrib.get('value')
         version.publication_seqno = self.__ods_xml_data.find(
             './Manifest/PublicationSeqNum').attrib.get('value')
+        version.publication_source = self.__ods_xml_data.find(
+            './Manifest/PublicationSource').attrib.get('value')
+        version.file_creation_date = self.__ods_xml_data.find(
+            './Manifest/FileCreationDateTime').attrib.get('value')
         version.import_timestamp = datetime.datetime.now()
+        version.record_count = self.__ods_xml_data.find(
+            './Manifest/RecordCount').attrib.get('value')
+        version.content_description = self.__ods_xml_data.find(
+            './Manifest/ContentDescription').attrib.get('value')
 
         self.session.add(version)
 
-    def create_database(self, ods_xml_data):
+    def create_database(self, ods_xml_data, test_mode):
         """creates a sqlite database in the current path with all the data
 
         Parameters
@@ -433,8 +476,10 @@ class ODSDBCreator(object):
         -------
         None
         """
-        log.info('Starting import')
+        logger = logging.getLogger(__name__)
+        logger.info('Starting import')
 
+        self.__test_mode = test_mode
         self.__ods_xml_data = ods_xml_data
         if self.__ods_xml_data is not None:
             try:
@@ -443,14 +488,17 @@ class ODSDBCreator(object):
                 self.__create_organisations()
                 self.__create_settings()
 
-                log.debug("Committing session")
+                logger = logging.getLogger(__name__)
+                logger.debug("Committing session")
                 self.session.commit()
 
             except Exception as e:
                 # If anything fails, let's not commit anything
+                logger = logging.getLogger(__name__)
+                logger.error("Unexpected error:", sys.exc_info()[0])
+                logger.debug("Rolling back...")
                 self.session.rollback()
-                print("Unexpected error:", sys.exc_info()[0])
-                log.error(e)
+                logger.debug("Rollback complete")
                 raise
 
             finally:

@@ -19,10 +19,10 @@ class Successor(Base):
 
     ref = Column(Integer, primary_key=True)
     unique_id = Column(Integer)
-    org_odscode = Column(String(10))
+    org_odscode = Column(String(10), index=True)
     legal_start_date = Column(Date)
     type = Column(String(12))
-    target_odscode = Column(String(10))
+    target_odscode = Column(String(10), index=True)
     target_primary_role_code = Column(String(10))
     target_unique_role_id = Column(String(10))
 

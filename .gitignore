@@ -1,12 +1,12 @@
 # Project Specific Excludes
 *.sqlite
+*.dump
+Data/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
-
-Data/
 
 # C extensions
 *.so

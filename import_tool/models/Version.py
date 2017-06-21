@@ -22,6 +22,10 @@ class Version(Base):
     publication_seqno = Column(String)
     publication_date = Column(String)
     publication_type = Column(String)
+    publication_source = Column(String)
+    file_creation_date = Column(String)
+    record_count = Column(String)
+    content_description = Column(String)
 
     # Returns a printable version of the objects contents
     def __repr__(self):
@@ -30,11 +34,19 @@ class Version(Base):
             file_version='%s',\
             publication_seqno='%s',\
             publication_date='%s',\
-            publication_type='%s'\
+            publication_type='%s',\
+            publication_source='%s',\
+            file_creation_date='%s',\
+            record_count='%s',\
+            content_description='%s',\
             )>" % (
             self.version_ref,
             self.import_timestamp,
             self.file_version,
             self.publication_seqno,
             self.publication_date,
-            self.publication_type)
+            self.publication_type,
+            self.publication_source,
+            self.file_creation_date,
+            self.record_count,
+            self.content_description)
