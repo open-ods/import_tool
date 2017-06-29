@@ -18,7 +18,6 @@ class Address(Base):
     __tablename__ = 'addresses'
 
     addresses_ref = Column(Integer, primary_key=True)
-    organisation_ref = Column(Integer)
     org_odscode = Column(String(10), index=True)
     address_line1 = Column(String(75))
     address_line2 = Column(String(75))
@@ -27,8 +26,6 @@ class Address(Base):
     county = Column(String(75))
     post_code = Column(String(15))
     country = Column(String(50))
-    uprn = Column(Integer)
-    location_id = Column(String(12))
 
     # Returns a printable version of the objects contents
     def __repr__(self):

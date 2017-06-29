@@ -18,7 +18,6 @@ class Role(Base):
     __tablename__ = 'roles'
 
     ref = Column(Integer, primary_key=True)
-    organisation_ref = Column(String)
     org_odscode = Column(String(10), index=True)
     code = Column(String(10), index=True)
     primary_role = Column(Boolean)
