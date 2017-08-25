@@ -5,15 +5,14 @@ import sys
 import urllib.request
 import zipfile
 
-log = logging.getLogger('import_ods_xml')
-
 
 class ODSFileManager(object):
 
     __ods_xml_data = None
     __ods_schema = None
-
+   
     def __init__(self, xml_file_path, schema_file_path, xml_url=None, schema_url=None):
+        log = logging.getLogger(__name__)
         try:
             self.xml_file_path = xml_file_path
             log.debug('xml_file_path is %s' % self.xml_file_path)
@@ -61,6 +60,7 @@ class ODSFileManager(object):
             with urllib.request.urlopen(url) as response:
                 # Download the file and save it to a temporary file name
                 with open(tmp_file_name) as out_file:
+                    log = logging.getLogger(__name__)
                     log.info("Downloading schema")
                     out_file.write(response.read())
 
@@ -106,6 +106,7 @@ class ODSFileManager(object):
             with urllib.request.urlopen(url) as response:
                 # Download the file and save it to a temporary file name
                 with open(tmp_file_name) as out_file:
+                    log = logging.getLogger(__name__)
                     log.info("Downloading data")
                     out_file.write(response.read())
 
@@ -167,7 +168,8 @@ class ODSFileManager(object):
         -------
         None
         """
-
+        log = logging.getLogger(__name__)
+        log.debug(f'Data filename is {data_filename}')
         try:
             with zipfile.ZipFile(data_filename) as local_zipfile:
                 # get to the name of the actual zip file
@@ -185,7 +187,7 @@ class ODSFileManager(object):
 
     def __validate_xml_against_schema(self):
         try:
-
+            log = logging.getLogger(__name__)
             log.debug("Validating data against schema")
 
             doc = self.__ods_xml_data
@@ -196,6 +198,7 @@ class ODSFileManager(object):
                 raise Exception("XML file is not valid against the schema")
 
             else:
+                log = logging.getLogger(__name__)
                 log.debug("Data is valid against schema")
                 return valid
 
@@ -224,6 +227,6 @@ class ODSFileManager(object):
             data_filename = self.__retrieve_latest_datafile()
             self.__import_latest_datafile(data_filename)
             self.__validate_xml_against_schema()
-
+        log = logging.getLogger(__name__)
         log.info("Data loaded")
         return self.__ods_xml_data

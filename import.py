@@ -60,6 +60,7 @@ if args.xml:
     log.debug("XML parameter provided: %s" % xml_file_path)
 else:
     xml_file_path = 'data/fullfile.zip'
+    log.debug("XML file path parameter defaulting to: %s" % xml_file_path)
 
 # Set the schema file path if specified, otherwise use default
 if args.schema:
@@ -67,6 +68,7 @@ if args.schema:
     log.debug("Schema parameter provided: %s" % schema_file_path)
 else:
     schema_file_path = 'data/ancilliary.zip'
+    log.debug("Schema file path parameter defaulting to: %s" % schema_file_path)
 
 # Set the data file url if specified, otherwise use default
 if args.data_url:
