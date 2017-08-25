@@ -15,7 +15,7 @@ from import_tool.models.Successor import Successor
 from import_tool.models.Version import Version
 from import_tool.models.Setting import Setting
 
-schema_version = '012'
+schema_version = '015'
 
 
 def convert_string_to_date(string):

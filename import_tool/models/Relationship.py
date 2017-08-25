@@ -18,7 +18,6 @@ class Relationship(Base):
     __tablename__ = 'relationships'
 
     ref = Column(Integer, primary_key=True)
-    organisation_ref = Column(Integer)
     code = Column(String(10), index=True)
     target_odscode = Column(String(50), index=True)
     org_odscode = Column(String(10), index=True)

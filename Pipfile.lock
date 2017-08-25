@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a83fd9f605defb2878647c8aa06df5547b8c9f6e451a0d78c3ff959aac242183"
+            "sha256": "f0026da2573dccbb42b772bbdb3ee79f0b3c166cfacd8f8f28542a224a654bde"
         },
         "requires": {},
         "sources": [
@@ -15,8 +15,11 @@
         "lxml": {
             "version": "==3.8.0"
         },
+        "psycopg2": {
+            "version": "==2.7.1"
+        },
         "sqlalchemy": {
-            "version": "==1.1.10"
+            "version": "==1.1.11"
         },
         "tqdm": {
             "version": "==4.14.0"
