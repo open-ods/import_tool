@@ -14,5 +14,3 @@ $ heroku pg:backups restore -a <heroku_app_name> 'https://url.to/openods.dump' D
 ```
 
 4. I'd then recommend doing a `heroku -a <heroku_app_name> restart` which will cycle your dynos
-
-
