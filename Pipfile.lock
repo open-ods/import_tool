@@ -22,7 +22,11 @@
             "version": "==1.1.11"
         },
         "tqdm": {
-            "version": "==4.14.0"
+            "hashes": [
+                "sha256:9bd200335ee4429381e81bd82c08d16b59a5228a11e1ae71222b31646b3533f3",
+                "sha256:f1c098cd12cfb39190805d0c771198af0a734ba63b381ea99d72ea38770525c7"
+            ],
+            "version": "==4.19.7"
         }
     },
     "develop": {}
