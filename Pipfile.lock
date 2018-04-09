@@ -3,6 +3,7 @@
         "hash": {
             "sha256": "f0026da2573dccbb42b772bbdb3ee79f0b3c166cfacd8f8f28542a224a654bde"
         },
+        "pipfile-spec": 6,
         "requires": {},
         "sources": [
             {
@@ -22,7 +23,11 @@
             "version": "==1.1.11"
         },
         "tqdm": {
-            "version": "==4.14.0"
+            "hashes": [
+                "sha256:185f0db47cd591c843774678e44fe4933caa5fda36177eb96f22033e4bcd9702",
+                "sha256:b94af236084ceaad93a6ada00bd9976900b172ec9b821828ed0d4b53f7431170"
+            ],
+            "version": "==4.21.0"
         }
     },
     "develop": {}
